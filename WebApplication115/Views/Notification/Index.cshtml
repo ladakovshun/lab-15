@@ -1,0 +1,33 @@
+﻿<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.14/signalr.min.js"></script>
+</head>
+<body>
+    <h1>SignalR Notifications</h1>
+    <div id="notifications"></div>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationHub")
+            .build();
+
+        connection.start()
+            .then(function () {
+                console.log("SignalR connection established.");
+            })
+            .catch(function (err) {
+                console.error("SignalR connection error:", err.toString());
+            });
+
+        connection.on("ReceiveMessage", function (message) {
+            const notificationsDiv = document.getElementById("notifications");
+            const newMessage = document.createElement("p");
+            newMessage.textContent = message;
+            notificationsDiv.appendChild(newMessage);
+        });
+    </script>
+</body>
+</html>
